@@ -1,6 +1,7 @@
 # 가계부 API (ledger-api)
 
-**GitHub:** _push 후 기입_ · **Render 배포 URL:** _배포 후 기입_ · Swagger UI: `<배포 URL>/docs`
+**GitHub:** <https://github.com/KuJae/ledger-api> · **Render 배포 URL:** <https://ledger-api-1nin.onrender.com>
+**Swagger UI:** <https://ledger-api-1nin.onrender.com/docs>
 
 클라우드컴퓨팅실습 4주차 실습 기록입니다.
 FastAPI + SQLAlchemy를 **Supabase(클라우드 PostgreSQL)** 에 연결해 계좌·거래·카테고리를 저장·조회·집계하고,
@@ -72,6 +73,22 @@ uvicorn main:app --reload          # http://127.0.0.1:8000/docs
 <!-- Supabase Table Editor 캡처를 여기에 붙이세요 (로그인된 브라우저가 필요합니다) -->
 
 Supabase에 연결해 테이블 세 개가 생성되고, API로 넣은 계좌·거래가 그대로 저장되는 것을 확인했습니다.
+
+배포 후에는 **Render의 API가 Supabase를 읽는다**는 것을 이렇게 확인했습니다 —
+내 컴퓨터에서 만든 `월급통장`이 인터넷 주소의 `GET /accounts`에 그대로 나왔습니다.
+Render 안의 SQLite였다면 빈 배열이 나왔을 것입니다.
+
+```console
+$ curl https://ledger-api-1nin.onrender.com/accounts
+[{"id":1,"name":"월급통장","balance":1500000}]          # ← 로컬에서 만든 계좌
+
+$ curl -X POST https://ledger-api-1nin.onrender.com/accounts \
+       -H 'Content-Type: application/json' -d '{"name":"배포테스트","balance":0}'
+{"id":2,"name":"배포테스트","balance":0}
+
+$ curl https://ledger-api-1nin.onrender.com/accounts
+[{"id":1,"name":"월급통장",...},{"id":2,"name":"배포테스트",...}]
+```
 
 ```console
 # 접속 확인 — 비밀번호는 ***로 가려진다
