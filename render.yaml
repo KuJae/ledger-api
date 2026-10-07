@@ -1,0 +1,16 @@
+# (워크북에는 없는 추가분) Render Blueprint —
+# 대시보드에서 New → Blueprint 로 읽히면 아래 설정이 자동으로 채워진다.
+# New → Web Service 로 직접 만들 때도 같은 값을 폼에 넣으면 된다.
+services:
+  - type: web
+    name: ledger-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    # 이번 주는 파일이 저장소 루트에 있으므로 app.main:app 이 아니라 main:app 이다(3주차와 다름).
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      # Supabase Session pooler 연결 문자열. 대시보드에서 직접 입력한다(저장소에 두지 않는다).
+      # 이 값이 없으면 오류 없이 Live 가 되지만 Render 안의 SQLite 에 저장되어 과제로 인정되지 않는다.
+      - key: DATABASE_URL
+        sync: false
